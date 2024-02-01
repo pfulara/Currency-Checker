@@ -19,7 +19,7 @@ export default function DatepickerEndDate({ currency, startDate, endDate }) {
       <label htmlFor='end-date' className='text-white'>
         End Date
       </label>
-      <input id='stendart-date' min={startDate} max={today} type='date' value={endDate} onChange={handleDateChange} />
+      <input id='end-date' min={startDate} max={today} type='date' value={endDate} onChange={handleDateChange} />
     </div>
   );
 }

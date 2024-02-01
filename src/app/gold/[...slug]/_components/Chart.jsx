@@ -6,7 +6,7 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
       <div className='custom-tooltip bg-white text-black p-3 rounded-md'>
         <p className='label'>{`${label}`}</p>
-        <p className='desc'>{`1 ${payload[0].payload.base} = ${payload[0].value} ${payload[0].payload.currency}`}</p>
+        <p className='desc'>{`1g gold = ${payload[0].value} ${payload[0].payload.currency}`}</p>
       </div>
     );
   }

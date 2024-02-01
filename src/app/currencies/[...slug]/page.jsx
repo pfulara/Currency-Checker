@@ -47,7 +47,8 @@ export default async function page({ params }) {
 
   return (
     <div className='w-full'>
-      <div className='grid grid-cols-4 gap-x-4'>
+      <h2 className='text-center text-4xl mb-20'>Historial Currency Price Checker</h2>
+      <div className='grid xs:grid-cols-1 md:grid-cols-4 gap-x-4'>
         <SelectBaseCurrency
           currencies={currencies}
           baseCurrency={baseCurrency}

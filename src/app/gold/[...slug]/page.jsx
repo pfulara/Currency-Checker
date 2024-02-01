@@ -3,14 +3,20 @@ import DatepickerEndDate from './_components/DatepickerEndDate';
 import DatepickerStartDate from './_components/DatepickerStartDate';
 import Chart from './_components/Chart';
 
-export async function getPLNPrices() {
-  const res = await fetch(`https://api.frankfurter.app/2023-01-01..2023-01-31?from=PLN&to=USD`);
+export async function getPLNPrices(currency) {
+  const res = await fetch(`https://api.frankfurter.app/latest?from=PLN&to=${currency}`);
 
   return res.json();
 }
 
 export async function getCurrencies() {
   const res = await fetch(`https://api.frankfurter.app/currencies`);
+
+  return res.json();
+}
+
+export async function getGoldPrice(startDate, endDate) {
+  const res = await fetch(`http://api.nbp.pl/api/cenyzlota/${startDate}/${endDate}?format=json`);
 
   return res.json();
 }
@@ -31,17 +37,28 @@ export default async function page({ params }) {
 
   const currencies = await getCurrencies();
 
-  const plnPrice = await getPLNPrices();
+  const plnPrice = await getPLNPrices(currency);
+
+  const goldPrice = await getGoldPrice(startDate, endDate);
+
+  const formattedPLNPrice = currency === 'PLN' ? 1 : plnPrice.rates[currency];
+
+  const formattedGoldPrices = goldPrice.map((item) => ({
+    date: item.data,
+    value: (item.cena * formattedPLNPrice).toFixed(2),
+    currency,
+  }));
 
   return (
     <div className='w-full'>
-      <div className='grid grid-cols-3 gap-x-4'>
+      <h2 className='text-center text-4xl mb-20'>Historial Gold Price Checker</h2>
+      <div className='grid xs:grid-cols-1 md:grid-cols-3 gap-x-4'>
         <SelectCurrency currencies={currencies} currency={currency} startDate={startDate} endDate={endDate} />
         <DatepickerStartDate currency={currency} startDate={startDate} endDate={endDate} />
         <DatepickerEndDate currency={currency} startDate={startDate} endDate={endDate} />
       </div>
       <div className='flex h-80 w-full'>
-        <Chart data={[]} />
+        <Chart data={formattedGoldPrices} />
       </div>
     </div>
   );

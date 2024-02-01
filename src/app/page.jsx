@@ -1,3 +1,4 @@
+import Calculator from './Calculator';
 import Link from 'next/link';
 
 export async function getGoldPrice() {
@@ -12,10 +13,18 @@ export async function getPLNPrice(amount) {
   return res.json();
 }
 
+export async function getCurrencies() {
+  const res = await fetch(`https://api.frankfurter.app/currencies`);
+
+  return res.json();
+}
+
 export default async function Home() {
   const goldPrice = await getGoldPrice();
 
   const plnPrice = await getPLNPrice(goldPrice[0].cena);
+
+  const currencies = await getCurrencies();
 
   return (
     <div className='text-center'>
@@ -31,9 +40,10 @@ export default async function Home() {
         </Link>{' '}
         prices
       </p>
-      <p className='text-2xl py-8 px-12 border-white border-solid border-2 rounded-xl'>
+      <p className='text-2xl py-8 px-12 border-white border-solid border-2 rounded-xl m-auto w-fit'>
         Current price for 1g gold: <span className='font-bold'>{plnPrice.rates.USD.toFixed(2)} USD</span>
       </p>
+      <Calculator currencies={currencies} />
     </div>
   );
 }
